@@ -1,0 +1,20 @@
+{
+  "name": "short-url-hono-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint:b": "npx @biomejs/biome lint ./backend",
+    "format:b": "npx @biomejs/biome format ./backend",
+    "check:b": "npx @biomejs/biome check --apply ./backend",
+    "lint:f": "npx @biomejs/biome lint ./frontend",
+    "format:f": "npx @biomejs/biome format ./frontend",
+    "check:f": "npx @biomejs/biome check --apply ./frontend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "1.6.1"
+  }
+}
