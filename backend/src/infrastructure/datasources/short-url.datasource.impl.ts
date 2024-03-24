@@ -1,16 +1,17 @@
+import { BcryptAdapter } from "../../config"
 import type { ShortenerUrlDatasource } from "../../domain/datasources"
-import { createHmac } from "node:crypto"
 import { CustomError } from "../../domain/errors"
-import { envs } from "../../config"
 
 const data = new Map<string, string>()
 
+type HashFunction = (s: string) => string
+
 export class ShortenerUrlDatasourceImpl implements ShortenerUrlDatasource {
+	constructor(private readonly hashUrl: HashFunction = BcryptAdapter.hash) {}
+
 	generatesShortUrl(longUrl: string): Promise<string> {
 		return new Promise((resolve, reject) => {
-			const hash = createHmac("sha256", envs.HASH_SECRET)
-				.update(longUrl + Date.now().toString())
-				.digest("base64")
+			const hash = this.hashUrl(longUrl + Date.now().toString())
 			const short = hash.slice(-6)
 
 			const existing = data.get(short)
