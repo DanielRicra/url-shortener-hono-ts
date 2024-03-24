@@ -1,4 +1,3 @@
-import { serve } from "@hono/node-server"
 import { Hono } from "hono"
 import { cors } from "hono/cors"
 import { logger } from "hono/logger"
@@ -16,17 +15,19 @@ export class Server {
 		this.app = new Hono({ strict: false })
 		this.port = port
 		this.routes = routes
+
+		this.start()
 	}
 
-	start() {
+	private start() {
 		console.log(`Server is running on http://localhost:${this.port}`)
 		this.app.use(logger())
 		this.app.use(cors())
 		this.app.get("/", (c) => c.text("Short-Url API"))
 		this.app.route("/api", this.routes)
-		serve({
-			port: this.port,
-			fetch: this.app.fetch,
-		})
+	}
+
+	get getApp() {
+		return this.app
 	}
 }

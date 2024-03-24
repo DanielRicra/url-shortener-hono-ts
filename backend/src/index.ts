@@ -1,10 +1,5 @@
-import { envs } from "./config"
 import { AppRoutes, Server } from "./presentation"
 
-;(() => {
-	main()
-})()
+const server = new Server({ routes: AppRoutes.routes })
 
-function main() {
-	new Server({ routes: AppRoutes.routes, port: envs.PORT }).start()
-}
+export default server.getApp
