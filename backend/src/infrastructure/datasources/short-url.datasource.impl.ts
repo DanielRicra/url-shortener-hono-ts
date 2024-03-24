@@ -1,14 +1,16 @@
 import type { ShortenerUrlDatasource } from "../../domain/datasources"
 import { createHmac } from "node:crypto"
 import { CustomError } from "../../domain/errors"
+import { envs } from "../../config"
 
-const secret = "123456"
 const data = new Map<string, string>()
 
 export class ShortenerUrlDatasourceImpl implements ShortenerUrlDatasource {
 	generatesShortUrl(longUrl: string): Promise<string> {
 		return new Promise((resolve, reject) => {
-			const hash = createHmac("sha256", secret).update(longUrl).digest("base64")
+			const hash = createHmac("sha256", envs.HASH_SECRET)
+				.update(longUrl + Date.now().toString())
+				.digest("base64")
 			const short = hash.slice(-6)
 
 			const existing = data.get(short)
