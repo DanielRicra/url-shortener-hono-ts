@@ -1,9 +1,10 @@
-import { AppRoutes, Server } from "./presentation";
+import { envs } from "./config"
+import { AppRoutes, Server } from "./presentation"
 
-(() => {
-	main();
-})();
+;(() => {
+	main()
+})()
 
 function main() {
-	new Server({ routes: AppRoutes.routes }).start();
+	new Server({ routes: AppRoutes.routes, port: envs.PORT }).start()
 }
