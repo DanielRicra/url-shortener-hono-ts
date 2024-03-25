@@ -3,33 +3,44 @@ import { Hono } from "hono"
 import { object, string } from "zod"
 
 import type { ShortenerUrlRepository } from "../../domain/repositories"
+import type { Variables } from "./types"
+import type { Database } from "../../data/turso"
 
 const formSchema = object({
 	longUrl: string().url("Invalid url"),
 })
 const getShortUrlSchema = object({
-	shortUrl: string(),
+	short_url: string(),
 })
 
 export class ShortenerUrlRoute {
 	constructor(private shortenerUrlRepository: ShortenerUrlRepository) {}
-	routes(): Hono {
-		const router = new Hono()
+	routes(): Hono<{ Variables: Variables }> {
+		const router = new Hono<{ Variables: Variables }>()
 
 		router.post("/shorten-url", zValidator("json", formSchema), async (c) => {
+			const db: Database = c.get("db")
+
 			const { longUrl } = c.req.valid("json")
 
-			const shortenedUrl =
-				await this.shortenerUrlRepository.generatesShortUrl(longUrl)
+			const shortenedUrl = await this.shortenerUrlRepository.generatesShortUrl(
+				longUrl,
+				db,
+			)
 			return c.json({ shortenedUrl })
 		})
 		router.get(
-			"/:shortUrl",
+			"/:short-url",
 			zValidator("param", getShortUrlSchema),
 			async (c) => {
-				const { shortUrl } = c.req.valid("param")
+				const db: Database = c.get("db")
 
-				const longUrl = await this.shortenerUrlRepository.getLongUrl(shortUrl)
+				const { short_url: shortUrl } = c.req.valid("param")
+
+				const longUrl = await this.shortenerUrlRepository.getLongUrl(
+					shortUrl,
+					db,
+				)
 				return c.redirect(longUrl, 301)
 			},
 		)
