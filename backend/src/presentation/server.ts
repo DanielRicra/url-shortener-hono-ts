@@ -27,7 +27,7 @@ export class Server {
 	}
 
 	private start() {
-		console.log(`Server is running on http://localhost:${this.port}`)
+		console.log("Server is running on http://localhost:8787")
 		this.app.use(logger())
 		this.app.use(cors())
 		this.app.use("*", async (c, next) => {
