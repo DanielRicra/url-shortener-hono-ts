@@ -1,8 +1,9 @@
 ```
 npm install
 npm run dev
+npm run deploy
 ```
 
 ```
-open http://localhost:3000
+open http://localhost:8787
 ```
