@@ -10,7 +10,7 @@ const formSchema = object({
 	longUrl: string().url("Invalid url"),
 })
 const getShortUrlSchema = object({
-	short_url: string(),
+	shorturl: string(),
 })
 
 export class ShortenerUrlRoute {
@@ -30,12 +30,12 @@ export class ShortenerUrlRoute {
 			return c.json({ shortenedUrl })
 		})
 		router.get(
-			"/:short-url",
+			"/:shorturl",
 			zValidator("param", getShortUrlSchema),
 			async (c) => {
 				const db: Database = c.get("db")
 
-				const { short_url: shortUrl } = c.req.valid("param")
+				const { shorturl: shortUrl } = c.req.valid("param")
 
 				const longUrl = await this.shortenerUrlRepository.getLongUrl(
 					shortUrl,
