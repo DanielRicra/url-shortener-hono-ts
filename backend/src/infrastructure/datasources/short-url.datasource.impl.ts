@@ -1,32 +1,41 @@
+import { eq } from "drizzle-orm"
 import { BcryptAdapter } from "../../config"
+import { type Database, urls } from "../../data/turso"
 import type { ShortenerUrlDatasource } from "../../domain/datasources"
 import { CustomError } from "../../domain/errors"
-
-const data = new Map<string, string>()
 
 type HashFunction = (s: string) => string
 
 export class ShortenerUrlDatasourceImpl implements ShortenerUrlDatasource {
 	constructor(private readonly hashUrl: HashFunction = BcryptAdapter.hash) {}
 
-	generatesShortUrl(longUrl: string): Promise<string> {
-		return new Promise((resolve, reject) => {
+	async generatesShortUrl(longUrl: string, db: Database): Promise<string> {
+		try {
 			const hash = this.hashUrl(longUrl + Date.now().toString())
 			const short = hash.slice(-6)
 
-			const existing = data.get(short)
-			if (existing)
-				return reject(CustomError.internalServerError("Key already exists"))
-
-			data.set(short, longUrl)
-			resolve(short)
-		})
+			// Save the  short url in db
+			await db.insert(urls).values({ shortUrl: short, longUrl })
+			return short
+		} catch (error) {
+			console.log({ where: "generateShortUrl datasource impl", error })
+			throw error
+		}
 	}
-	getLongUrl(shortUrl: string): Promise<string> {
-		return new Promise((resolve, reject) => {
-			const long = data.get(shortUrl)
-			if (!long) return reject(CustomError.notFound("Short url not found"))
-			resolve(long)
-		})
+	async getLongUrl(shortUrl: string, db: Database): Promise<string> {
+		try {
+			const long = await db
+				.select()
+				.from(urls)
+				.where(eq(urls.shortUrl, shortUrl))
+				.limit(1)
+
+			if (!long) throw CustomError.notFound("Short url not found")
+
+			return long[0].longUrl
+		} catch (error) {
+			console.log({ where: "getLongUrl datasource impl", error })
+			throw error
+		}
 	}
 }
