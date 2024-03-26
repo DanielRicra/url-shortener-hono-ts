@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/src/style.css">
+  <title>Short URLs</title>
+</head>
+
+<body>
+  <div id="app" class="home">
+    <h1 class="home__title">Short URLs</h1>
+    <section>
+      <form class="home__form" id="form">
+        <p class="home__form-description">Paste the URL you want to be shortener</p>
+        <div class="home__form-box">
+          <input type="text" class="input-longUrl" aria-label="Long url" id="longUrlInput">
+          <button type="submit" id="submit-btn">Short Url</button>
+        </div>
+        <div class="error-container" id="error-container">
+        </div>
+      </form>
+      <div class="short-url__container hidden" id="short-url-container">
+        <p id="short-url">Short url</p>
+        <button type="button" id="copy-btn">Copy</button>
+      </div>
+    </section>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
