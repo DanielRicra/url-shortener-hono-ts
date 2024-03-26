@@ -2,7 +2,7 @@ class View {
 	private longUrlInput: HTMLInputElement
 	private form: HTMLFormElement
 	private shortenedUrlContainer: HTMLElement
-	private shortUrlText: HTMLElement
+	private shortUrlText: HTMLAnchorElement
 	private errorContainer: HTMLElement
 	private submitBtn: HTMLElement
 	private copyBtn: HTMLButtonElement
@@ -11,7 +11,7 @@ class View {
 		this.longUrlInput = this.findElement<HTMLInputElement>("#longUrlInput")
 		this.form = this.findElement<HTMLFormElement>("#form")
 		this.shortenedUrlContainer = this.findElement("#short-url-container")
-		this.shortUrlText = this.findElement("#short-url")
+		this.shortUrlText = this.findElement<HTMLAnchorElement>("#short-url")
 		this.errorContainer = this.findElement("#error-container")
 		this.submitBtn = this.findElement("#submit-btn")
 		this.copyBtn = this.findElement("#copy-btn")
@@ -34,6 +34,7 @@ class View {
 	showShortenedUrlContainer(shortenedUrl: string) {
 		this.shortenedUrlContainer.classList.remove("hidden")
 		this.shortUrlText.textContent = shortenedUrl
+		this.shortUrlText.href = shortenedUrl
 	}
 
 	toggleShowError({
