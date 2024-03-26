@@ -1,7 +1,7 @@
 import UrlShortenerService from "./http-client"
 import View from "./view"
 
-const BASE_URL = "https://shorturl.danielquispe-142.workers.dev/"
+const BASE_URL = "https://shorturl.danielquispe-142.workers.dev"
 
 function main() {
 	const urlShortenerService = new UrlShortenerService()
